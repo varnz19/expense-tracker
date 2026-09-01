@@ -31,6 +31,7 @@
       --text-subtle: #A39186;
 
       /* Category Colors */
+      --cat-food: #FF922B;
       --cat-hospital: #FF4D4D;
       --cat-travelling: #3080E8;
       --cat-grocery: #1DA855;
@@ -437,6 +438,66 @@
       gap: 10px;
     }
 
+    /* Payment Method Pills */
+    .payment-pills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .payment-pill-btn {
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 9px 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+
+    .payment-pill-btn:hover {
+      background: #FFFDF7;
+      transform: translateY(-1px);
+    }
+
+    .payment-pill-btn.active {
+      background: var(--accent-yellow);
+      box-shadow: 2.5px 2.5px 0px var(--border-color);
+      transform: translateY(-1px);
+    }
+
+    .payment-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-color);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .payment-tag.UPI {
+      background: #E0F2FE;
+      color: #0369A1;
+    }
+
+    .payment-tag.Cash {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+
     /* Large + ADD EXPENSE button */
     .btn-add-retro {
       width: 100%;
@@ -523,6 +584,10 @@
       border-radius: 50%;
       border: 1.5px solid var(--border-color);
       display: inline-block;
+    }
+
+    .chip-indicator-dot.Food {
+      background-color: var(--cat-food);
     }
 
     .chip-indicator-dot.Hospital {
@@ -612,6 +677,11 @@
       font-size: 16px;
       flex-shrink: 0;
       box-shadow: 1.5px 1.5px 0px var(--border-color);
+    }
+
+    .category-circle-badge.Food {
+      background-color: #FFF0E6;
+      color: var(--cat-food);
     }
 
     .category-circle-badge.Hospital {
@@ -803,6 +873,10 @@
       transition: width 0.4s ease;
     }
 
+    .breakdown-bar-fill.Food {
+      background-color: var(--cat-food);
+    }
+
     .breakdown-bar-fill.Hospital {
       background-color: var(--cat-hospital);
     }
@@ -960,6 +1034,7 @@
               <div class="form-field-group">
                 <label for="category-select" class="field-label">Category</label>
                 <select id="category-select" class="retro-select" required>
+                  <option value="Food">🍲 Food</option>
                   <option value="Hospital">🏥 Hospital</option>
                   <option value="Travelling">✈️ Travelling</option>
                   <option value="Grocery">🛒 Grocery</option>
@@ -971,6 +1046,19 @@
               <div class="form-field-group">
                 <label for="date-input" class="field-label">Date</label>
                 <input type="date" id="date-input" class="retro-input" required>
+              </div>
+            </div>
+
+            <!-- Payment Method (UPI vs Cash) -->
+            <div class="form-field-group">
+              <label class="field-label">Payment Mode</label>
+              <div class="payment-pills-row">
+                <button type="button" class="payment-pill-btn active" data-method="UPI">
+                  <span>⚡</span> UPI
+                </button>
+                <button type="button" class="payment-pill-btn" data-method="Cash">
+                  <span>💵</span> Cash
+                </button>
               </div>
             </div>
 
@@ -991,6 +1079,9 @@
         <!-- Filter Chips Row -->
         <div class="filter-chips-section" aria-label="Filter expenses by category">
           <button type="button" class="retro-filter-chip active" data-filter="All">All</button>
+          <button type="button" class="retro-filter-chip" data-filter="Food">
+            <span class="chip-indicator-dot Food"></span> Food
+          </button>
           <button type="button" class="retro-filter-chip" data-filter="Hospital">
             <span class="chip-indicator-dot Hospital"></span> Hospital
           </button>
@@ -1081,6 +1172,7 @@
       const STORAGE_KEY = 'expense_pool_retro_data_v1';
 
       const CATEGORIES = {
+        Food: { name: 'Food', icon: '🍲', color: '#FF922B' },
         Hospital: { name: 'Hospital', icon: '🏥', color: '#FF4D4D' },
         Travelling: { name: 'Travelling', icon: '✈️', color: '#3080E8' },
         Grocery: { name: 'Grocery', icon: '🛒', color: '#1DA855' },
@@ -1091,6 +1183,7 @@
       let expenses = [];
       let activeTab = 'log';
       let activeFilter = 'All';
+      let selectedPaymentMethod = 'UPI';
       let displayedTotal = 0;
 
       // Current view month (YYYY-MM)
@@ -1169,8 +1262,8 @@
             // Seed example Indian rupee expenses matching prompt specs
             const todayStr = getTodayString();
             expenses = [
-              { id: 'exp_r1', category: 'Grocery', amount: 34.50, date: todayStr, note: 'Daily essentials & milk' },
-              { id: 'exp_r2', category: 'Travelling', amount: 18.00, date: todayStr, note: 'Auto rickshaw to metro' }
+              { id: 'exp_r1', category: 'Grocery', amount: 34.50, date: todayStr, paymentMethod: 'UPI', note: 'Daily essentials & milk' },
+              { id: 'exp_r2', category: 'Travelling', amount: 18.00, date: todayStr, paymentMethod: 'Cash', note: 'Auto rickshaw to metro' }
             ];
             saveExpenses();
           }
@@ -1256,6 +1349,7 @@
 
           filtered.forEach(item => {
             const cat = CATEGORIES[item.category] || { icon: '📦', name: item.category };
+            const payMethod = item.paymentMethod || 'UPI';
             const card = document.createElement('div');
             card.className = 'retro-expense-card';
             card.dataset.id = item.id;
@@ -1268,6 +1362,7 @@
                 <div class="card-text-col">
                   <div class="card-category-title">
                     <span>${cat.name}</span>
+                    <span class="payment-tag ${payMethod}">${payMethod === 'Cash' ? '💵 Cash' : '⚡ UPI'}</span>
                   </div>
                   ${item.note ? `<span class="card-note-text">${escapeHtml(item.note)}</span>` : ''}
                   <span class="card-date-badge">${formatDisplayDate(item.date)}</span>
@@ -1318,6 +1413,7 @@
         const sortedHistory = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
         sortedHistory.forEach(item => {
           const cat = CATEGORIES[item.category] || { icon: '📦', name: item.category };
+          const payMethod = item.paymentMethod || 'UPI';
           const card = document.createElement('div');
           card.className = 'retro-expense-card';
           card.innerHTML = `
@@ -1326,7 +1422,10 @@
                 ${cat.icon}
               </div>
               <div class="card-text-col">
-                <span class="card-category-title">${cat.name}</span>
+                <div class="card-category-title">
+                  <span>${cat.name}</span>
+                  <span class="payment-tag ${payMethod}">${payMethod === 'Cash' ? '💵 Cash' : '⚡ UPI'}</span>
+                </div>
                 ${item.note ? `<span class="card-note-text">${escapeHtml(item.note)}</span>` : ''}
                 <span class="card-date-badge">${formatDisplayDate(item.date)}</span>
               </div>
@@ -1346,6 +1445,7 @@
         const total = monthExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
         const categoryTotals = {
+          Food: 0,
           Hospital: 0,
           Travelling: 0,
           Grocery: 0,
@@ -1438,6 +1538,16 @@
           });
         });
 
+        // Payment Method pills
+        const paymentPills = document.querySelectorAll('.payment-pill-btn');
+        paymentPills.forEach(pill => {
+          pill.addEventListener('click', () => {
+            paymentPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            selectedPaymentMethod = pill.dataset.method;
+          });
+        });
+
         // Add Expense Form Submit
         expenseForm.addEventListener('submit', (e) => {
           e.preventDefault();
@@ -1462,6 +1572,7 @@
             category,
             amount: parseFloat(amount.toFixed(2)),
             date,
+            paymentMethod: selectedPaymentMethod,
             note
           };
 
