@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EXPENSE POOL — Retro Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       Retro-Modern Desktop Design System
+       ========================================================================== */
+    :root {
+      /* Warm Retro Palette */
+      --bg-desktop: #FAF5ED;
+      --bg-window: #FFFDF9;
+      --border-color: #2D1A10;
+      --card-pink: #FF8573;
+      --card-pink-light: #FFEAE6;
+      --accent-teal: #198074;
+      --accent-teal-light: #E0F2EF;
+      --accent-yellow: #FFD028;
+      --accent-yellow-light: #FFF8D6;
+
+      --text-main: #2D1A10;
+      --text-muted: #79665B;
+      --text-subtle: #A39186;
+
+      /* Category Colors */
+      --cat-hospital: #FF4D4D;
+      --cat-travelling: #3080E8;
+      --cat-grocery: #1DA855;
+      --cat-other: #9B51E0;
+
+      /* Retro Hard Shadows & Radii */
+      --shadow-sm: 2px 2px 0px var(--border-color);
+      --shadow-md: 4px 4px 0px var(--border-color);
+      --shadow-lg: 6px 6px 0px var(--border-color);
+      --shadow-btn: 3px 3px 0px var(--border-color);
+      --shadow-btn-pressed: 1px 1px 0px var(--border-color);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-desktop);
+      background-image:
+        radial-gradient(var(--border-color) 0.75px, transparent 0.75px),
+        radial-gradient(var(--border-color) 0.75px, var(--bg-desktop) 0.75px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      background-opacity: 0.15;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Main Window Container */
+    .retro-window {
+      width: 100%;
+      max-width: 540px;
+      background: var(--bg-window);
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       Window Header
+       ========================================================================== */
+    .window-header {
+      background: #F3ECE1;
+      border-bottom: 3px solid var(--border-color);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .window-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .control-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      display: inline-block;
+    }
+
+    .control-dot.red {
+      background-color: #FF5F56;
+    }
+
+    .control-dot.yellow {
+      background-color: #FFBD2E;
+    }
+
+    .control-dot.green {
+      background-color: #27C93F;
+    }
+
+    .window-title-badge {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--border-color);
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .window-decor {
+      font-size: 16px;
+      color: var(--border-color);
+      line-height: 1;
+      font-weight: bold;
+    }
+
+    /* ==========================================================================
+       Tab Navigation (Log | History | Breakdown)
+       ========================================================================== */
+    .tab-navigation-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 3px solid var(--border-color);
+      background: #EFE6D8;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-right: 3px solid var(--border-color);
+      padding: 12px 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+    }
+
+    .tab-btn:last-child {
+      border-right: none;
+    }
+
+    .tab-btn:hover {
+      background: #F8F1E7;
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--bg-window);
+      color: var(--text-main);
+      font-weight: 800;
+      box-shadow: inset 0 -3px 0 var(--accent-teal);
+    }
+
+    /* Window Body */
+    .window-body {
+      padding: 20px 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tab-panel.hidden {
+      display: none !important;
+    }
+
+    /* ==========================================================================
+       Month Selector & Total Header Card
+       ========================================================================== */
+    .month-selector-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border: 2.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-circle-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent-yellow);
+      border: 2px solid var(--border-color);
+      color: var(--border-color);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.1s ease;
+    }
+
+    .nav-circle-btn:hover {
+      background: #FFE066;
+      transform: translateY(-1px);
+    }
+
+    .nav-circle-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .month-display-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    /* Monthly Total Card */
+    .total-hero-card {
+      background: #FFFFFF;
+      border: 2.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .total-badge-label {
+      background: var(--accent-teal);
+      color: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-pill);
+      padding: 3px 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 4px;
+    }
+
+    .total-rupee-display {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.1;
+      display: inline-block;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .total-count-subtext {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       Large Coral / Pink Expense-Entry Card
+       ========================================================================== */
+    .expense-entry-card {
+      background: var(--card-pink);
+      border: 2.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .entry-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .entry-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--border-color);
+    }
+
+    /* Form Inputs */
+    .input-wrapper-retro {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .currency-symbol-retro {
+      position: absolute;
+      left: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--border-color);
+      pointer-events: none;
+    }
+
+    .retro-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .retro-input.amount-field {
+      padding-left: 32px;
+      font-size: 18px;
+      font-weight: 800;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .retro-input:focus {
+      background: #FFFDF7;
+      border-color: var(--border-color);
+      box-shadow: 3px 3px 0px var(--border-color);
+      transform: translateY(-1px);
+    }
+
+    /* Category Select & Dropdown */
+    .retro-select {
+      width: 100%;
+      background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232D1A10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 38px 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .retro-select:focus {
+      box-shadow: 3px 3px 0px var(--border-color);
+      transform: translateY(-1px);
+    }
+
+    .form-two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Large + ADD EXPENSE button */
+    .btn-add-retro {
+      width: 100%;
+      background: var(--accent-teal);
+      color: #FFFFFF;
+      border: 2.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 13px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.1s ease;
+      margin-top: 4px;
+    }
+
+    .btn-add-retro:hover {
+      background: #177368;
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px var(--border-color);
+    }
+
+    .btn-add-retro:active {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-btn-pressed);
+    }
+
+    /* ==========================================================================
+       Filter Chips Row
+       ========================================================================== */
+    .filter-chips-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .filter-chips-section::-webkit-scrollbar {
+      display: none;
+    }
+
+    .retro-filter-chip {
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .retro-filter-chip:hover {
+      background: var(--accent-yellow-light);
+      transform: translateY(-1px);
+    }
+
+    .retro-filter-chip.active {
+      background: var(--accent-yellow);
+      box-shadow: 3px 3px 0px var(--border-color);
+      transform: translateY(-1px);
+    }
+
+    .chip-indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-color);
+      display: inline-block;
+    }
+
+    .chip-indicator-dot.Hospital {
+      background-color: var(--cat-hospital);
+    }
+
+    .chip-indicator-dot.Travelling {
+      background-color: var(--cat-travelling);
+    }
+
+    .chip-indicator-dot.Grocery {
+      background-color: var(--cat-grocery);
+    }
+
+    .chip-indicator-dot.Other {
+      background-color: var(--cat-other);
+    }
+
+    /* ==========================================================================
+       Expenses Cards List
+       ========================================================================== */
+    .expenses-list-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .retro-expense-card {
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.25s ease;
+      animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .retro-expense-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .retro-expense-card.collapsing {
+      opacity: 0;
+      transform: scale(0.9) translateX(20px);
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: -5px;
+      margin-bottom: -5px;
+      border-width: 0;
+      overflow: hidden;
+    }
+
+    .card-left-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .category-circle-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 1.5px 1.5px 0px var(--border-color);
+    }
+
+    .category-circle-badge.Hospital {
+      background-color: #FFE5E5;
+      color: var(--cat-hospital);
+    }
+
+    .category-circle-badge.Travelling {
+      background-color: #E6F0FF;
+      color: var(--cat-travelling);
+    }
+
+    .category-circle-badge.Grocery {
+      background-color: #E6F8ED;
+      color: var(--cat-grocery);
+    }
+
+    .category-circle-badge.Other {
+      background-color: #F3E8FF;
+      color: var(--cat-other);
+    }
+
+    .card-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .card-category-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-note-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-date-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+    }
+
+    .card-right-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .card-amount-rupee {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .retro-delete-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 1px 1px 0px var(--border-color);
+      transition: all 0.1s ease;
+    }
+
+    .retro-delete-btn:hover {
+      background: #FF4D4D;
+      color: #FFFFFF;
+      border-color: var(--border-color);
+      transform: scale(1.08);
+    }
+
+    .retro-delete-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: none;
+    }
+
+    /* Empty State */
+    .retro-empty-state {
+      background: #FFFFFF;
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .empty-symbol {
+      font-size: 32px;
+      margin-bottom: 2px;
+    }
+
+    .empty-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       History & Breakdown Tab Screens
+       ========================================================================== */
+    .history-card,
+    .breakdown-card {
+      background: #FFFFFF;
+      border: 2.5px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-section-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .breakdown-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #FDFBF7;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .breakdown-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .breakdown-bar-track {
+      width: 100%;
+      height: 12px;
+      background: #EAE3D5;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .breakdown-bar-fill {
+      height: 100%;
+      border-right: 1.5px solid var(--border-color);
+      transition: width 0.4s ease;
+    }
+
+    .breakdown-bar-fill.Hospital {
+      background-color: var(--cat-hospital);
+    }
+
+    .breakdown-bar-fill.Travelling {
+      background-color: var(--cat-travelling);
+    }
+
+    .breakdown-bar-fill.Grocery {
+      background-color: var(--cat-grocery);
+    }
+
+    .breakdown-bar-fill.Other {
+      background-color: var(--cat-other);
+    }
+
+    .history-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: var(--accent-yellow-light);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    /* Small Screen Adjustments */
+    @media (max-width: 480px) {
+      body {
+        padding: 12px 8px 36px;
+      }
+
+      .retro-window {
+        border-width: 2.5px;
+      }
+
+      .window-body {
+        padding: 16px 12px 20px;
+        gap: 14px;
+      }
+
+      .total-rupee-display {
+        font-size: 34px;
+      }
+
+      .form-two-cols {
+        grid-template-columns: 1fr;
+      }
+
+      .history-stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="retro-window">
+    <!-- Top Retro Window Header -->
+    <header class="window-header">
+      <div class="window-controls">
+        <span class="control-dot red"></span>
+        <span class="control-dot yellow"></span>
+        <span class="control-dot green"></span>
+      </div>
+
+      <div class="window-title-badge">
+        <span>👾</span>
+        <span>EXPENSE POOL</span>
+      </div>
+
+      <div class="window-decor" title="Retro Pool">✦</div>
+    </header>
+
+    <!-- Large Tab-Style Navigation Buttons -->
+    <nav class="tab-navigation-bar" aria-label="Main Navigation">
+      <button type="button" class="tab-btn active" data-tab="log">
+        <span></span> Log
+      </button>
+      <button type="button" class="tab-btn" data-tab="history">
+        <span></span> History
+      </button>
+      <button type="button" class="tab-btn" data-tab="breakdown">
+        <span></span> Breakdown
+      </button>
+    </nav>
+
+    <!-- Window Body Panels -->
+    <div class="window-body">
+
+      <!-- =========================================================================
+           TAB 1: LOG SCREEN (Main Screen)
+           ========================================================================= -->
+      <section id="panel-log" class="tab-panel">
+
+        <!-- Month Selector Bar -->
+        <div class="month-selector-bar">
+          <button type="button" id="prev-month-btn" class="nav-circle-btn" aria-label="Previous Month"
+            title="Previous Month">‹</button>
+          <div id="month-display" class="month-display-title">September 2026</div>
+          <button type="button" id="next-month-btn" class="nav-circle-btn" aria-label="Next Month"
+            title="Next Month">›</button>
+        </div>
+
+        <!-- Prominent Monthly Total Display Card -->
+        <div class="total-hero-card">
+          <span class="total-badge-label">Total Monthly Spent</span>
+          <div id="total-rupee-display" class="total-rupee-display">₹0.00</div>
+          <div id="total-count-subtext" class="total-count-subtext">0 expenses logged</div>
+        </div>
+
+        <!-- Coral/Pink Expense-Entry Card -->
+        <div class="expense-entry-card">
+          <div class="entry-card-title">
+            <span>+ Record New Expense</span>
+            <span>📝</span>
+          </div>
+
+          <form id="expense-entry-form" class="entry-form" novalidate>
+            <!-- Amount Input (₹) -->
+            <div class="form-field-group">
+              <label for="amount-input" class="field-label">Amount (₹)</label>
+              <div class="input-wrapper-retro">
+                <span class="currency-symbol-retro">₹</span>
+                <input type="number" id="amount-input" class="retro-input amount-field" placeholder="₹0.00" step="0.01"
+                  min="0.01" required>
+              </div>
+            </div>
+
+            <!-- Category & Date in Row -->
+            <div class="form-two-cols">
+              <!-- Category Selector -->
+              <div class="form-field-group">
+                <label for="category-select" class="field-label">Category</label>
+                <select id="category-select" class="retro-select" required>
+                  <option value="Hospital">🏥 Hospital</option>
+                  <option value="Travelling">✈️ Travelling</option>
+                  <option value="Grocery">🛒 Grocery</option>
+                  <option value="Other">📦 Other</option>
+                </select>
+              </div>
+
+              <!-- Date Input -->
+              <div class="form-field-group">
+                <label for="date-input" class="field-label">Date</label>
+                <input type="date" id="date-input" class="retro-input" required>
+              </div>
+            </div>
+
+            <!-- Optional Note Input -->
+            <div class="form-field-group">
+              <label for="note-input" class="field-label">Note (Optional)</label>
+              <input type="text" id="note-input" class="retro-input"
+                placeholder="e.g., Doctor visit, Metro ticket, Milk" maxlength="80">
+            </div>
+
+            <!-- Large + ADD EXPENSE Button -->
+            <button type="submit" class="btn-add-retro">
+              <span>+</span> ADD EXPENSE
+            </button>
+          </form>
+        </div>
+
+        <!-- Filter Chips Row -->
+        <div class="filter-chips-section" aria-label="Filter expenses by category">
+          <button type="button" class="retro-filter-chip active" data-filter="All">All</button>
+          <button type="button" class="retro-filter-chip" data-filter="Hospital">
+            <span class="chip-indicator-dot Hospital"></span> Hospital
+          </button>
+          <button type="button" class="retro-filter-chip" data-filter="Travelling">
+            <span class="chip-indicator-dot Travelling"></span> Travelling
+          </button>
+          <button type="button" class="retro-filter-chip" data-filter="Grocery">
+            <span class="chip-indicator-dot Grocery"></span> Grocery
+          </button>
+          <button type="button" class="retro-filter-chip" data-filter="Other">
+            <span class="chip-indicator-dot Other"></span> Other
+          </button>
+        </div>
+
+        <!-- User Expenses Cards List -->
+        <div id="expenses-list" class="expenses-list-box">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="retro-empty-state" style="display: none;">
+          <span class="empty-symbol">📋</span>
+          <h4 class="empty-title">No expenses yet this month</h4>
+          <p class="empty-desc">Use the pink card above to add your first expense!</p>
+        </div>
+      </section>
+
+
+      <!-- =========================================================================
+           TAB 2: HISTORY SCREEN
+           ========================================================================= -->
+      <section id="panel-history" class="tab-panel hidden">
+        <div class="history-card">
+          <div class="card-section-heading">
+            <span>All-Time Summary</span>
+            <span>📈</span>
+          </div>
+
+          <div class="history-stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">All-Time Total</div>
+              <div id="stat-all-time-total" class="stat-value">₹0.00</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Total Entries</div>
+              <div id="stat-all-time-count" class="stat-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="history-card">
+          <div class="card-section-heading">
+            <span>Complete Expense Log</span>
+            <span id="history-total-count" style="font-size: 12px; color: var(--text-muted);">0 items</span>
+          </div>
+
+          <div id="history-expenses-list" class="expenses-list-box">
+            <!-- Full history list rendered here -->
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =========================================================================
+           TAB 3: BREAKDOWN SCREEN
+           ========================================================================= -->
+      <section id="panel-breakdown" class="tab-panel hidden">
+        <div class="breakdown-card">
+          <div class="card-section-heading">
+            <span>Monthly Category Breakdown</span>
+            <span id="breakdown-month-label" style="font-size: 12px; color: var(--text-muted);">This Month</span>
+          </div>
+
+          <div id="breakdown-bars-container" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Category breakdown bars rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    (function () {
+      'use strict';
+
+      const STORAGE_KEY = 'expense_pool_retro_data_v1';
+
+      const CATEGORIES = {
+        Hospital: { name: 'Hospital', icon: '🏥', color: '#FF4D4D' },
+        Travelling: { name: 'Travelling', icon: '✈️', color: '#3080E8' },
+        Grocery: { name: 'Grocery', icon: '🛒', color: '#1DA855' },
+        Other: { name: 'Other', icon: '📦', color: '#9B51E0' }
+      };
+
+      // State
+      let expenses = [];
+      let activeTab = 'log';
+      let activeFilter = 'All';
+      let displayedTotal = 0;
+
+      // Current view month (YYYY-MM)
+      const now = new Date();
+      let currentViewYear = now.getFullYear();
+      let currentViewMonth = now.getMonth(); // 0-11
+
+      // DOM Elements
+      const totalDisplayEl = document.getElementById('total-rupee-display');
+      const totalCountSubtextEl = document.getElementById('total-count-subtext');
+      const monthDisplayEl = document.getElementById('month-display');
+      const prevMonthBtn = document.getElementById('prev-month-btn');
+      const nextMonthBtn = document.getElementById('next-month-btn');
+
+      const expenseForm = document.getElementById('expense-entry-form');
+      const amountInput = document.getElementById('amount-input');
+      const categorySelect = document.getElementById('category-select');
+      const dateInput = document.getElementById('date-input');
+      const noteInput = document.getElementById('note-input');
+
+      const filterChips = document.querySelectorAll('.retro-filter-chip');
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabPanels = {
+        log: document.getElementById('panel-log'),
+        history: document.getElementById('panel-history'),
+        breakdown: document.getElementById('panel-breakdown')
+      };
+
+      const expensesListEl = document.getElementById('expenses-list');
+      const emptyStateEl = document.getElementById('empty-state');
+      const historyListEl = document.getElementById('history-expenses-list');
+      const breakdownContainerEl = document.getElementById('breakdown-bars-container');
+
+      // Helper: Format Rupee Amount (₹XX.XX)
+      function formatRupee(amount) {
+        const num = Number(amount) || 0;
+        return '₹' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      // Helper: Format Date string (e.g., "1 Sep 2026")
+      function formatDisplayDate(dateStr) {
+        if (!dateStr) return '';
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        return dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      // Helper: Get Today's Date String (YYYY-MM-DD)
+      function getTodayString() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function getViewMonthKey() {
+        const m = String(currentViewMonth + 1).padStart(2, '0');
+        return `${currentViewYear}-${m}`;
+      }
+
+      function updateMonthHeader() {
+        const dt = new Date(currentViewYear, currentViewMonth, 1);
+        const title = dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        monthDisplayEl.textContent = title;
+        document.getElementById('breakdown-month-label').textContent = title;
+      }
+
+      // Storage
+      function loadExpenses() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            expenses = JSON.parse(raw);
+          } else {
+            // Seed example Indian rupee expenses matching prompt specs
+            const todayStr = getTodayString();
+            expenses = [
+              { id: 'exp_r1', category: 'Grocery', amount: 34.50, date: todayStr, note: 'Daily essentials & milk' },
+              { id: 'exp_r2', category: 'Travelling', amount: 18.00, date: todayStr, note: 'Auto rickshaw to metro' }
+            ];
+            saveExpenses();
+          }
+        } catch (e) {
+          console.error('Error loading data', e);
+          expenses = [];
+        }
+      }
+
+      function saveExpenses() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+        } catch (e) {
+          console.error('Error saving data', e);
+        }
+      }
+
+      // Smooth Count-Up Animation for Rupee Total (~400ms)
+      function animateTotal(targetVal) {
+        const duration = 400; // ms
+        const startTime = performance.now();
+        const startVal = displayedTotal;
+
+        function step(nowTime) {
+          const elapsed = nowTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          const current = startVal + (targetVal - startVal) * easeOut;
+
+          totalDisplayEl.textContent = formatRupee(current);
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            totalDisplayEl.textContent = formatRupee(targetVal);
+            displayedTotal = targetVal;
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      // Render Everything
+      function renderAll() {
+        updateMonthHeader();
+        renderLogTab();
+        renderHistoryTab();
+        renderBreakdownTab();
+      }
+
+      // 1. Render Log Tab
+      function renderLogTab() {
+        const monthKey = getViewMonthKey();
+        const monthExpenses = expenses.filter(e => e.date.startsWith(monthKey));
+
+        // Calculate Monthly Total
+        const monthTotal = monthExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+        animateTotal(monthTotal);
+
+        totalCountSubtextEl.textContent = `${monthExpenses.length} ${monthExpenses.length === 1 ? 'expense' : 'expenses'} logged`;
+
+        // Apply Category Filter and Sort
+        const filtered = monthExpenses.filter(item => {
+          if (activeFilter === 'All') return true;
+          return item.category.toLowerCase() === activeFilter.toLowerCase();
+        }).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        expensesListEl.innerHTML = '';
+
+        if (filtered.length === 0) {
+          emptyStateEl.style.display = 'flex';
+          const title = emptyStateEl.querySelector('.empty-title');
+          const desc = emptyStateEl.querySelector('.empty-desc');
+          if (activeFilter !== 'All') {
+            title.textContent = `No ${activeFilter} expenses`;
+            desc.textContent = `No transactions found under ${activeFilter} for this month.`;
+          } else {
+            title.textContent = 'No expenses yet this month';
+            desc.textContent = 'Use the pink card above to add your first expense!';
+          }
+        } else {
+          emptyStateEl.style.display = 'none';
+
+          filtered.forEach(item => {
+            const cat = CATEGORIES[item.category] || { icon: '📦', name: item.category };
+            const card = document.createElement('div');
+            card.className = 'retro-expense-card';
+            card.dataset.id = item.id;
+
+            card.innerHTML = `
+              <div class="card-left-group">
+                <div class="category-circle-badge ${item.category}" title="${item.category}">
+                  ${cat.icon}
+                </div>
+                <div class="card-text-col">
+                  <div class="card-category-title">
+                    <span>${cat.name}</span>
+                  </div>
+                  ${item.note ? `<span class="card-note-text">${escapeHtml(item.note)}</span>` : ''}
+                  <span class="card-date-badge">${formatDisplayDate(item.date)}</span>
+                </div>
+              </div>
+              <div class="card-right-group">
+                <span class="card-amount-rupee">${formatRupee(item.amount)}</span>
+                <button type="button" class="retro-delete-btn" title="Delete entry" aria-label="Delete">
+                  &times;
+                </button>
+              </div>
+            `;
+
+            // Delete action
+            card.querySelector('.retro-delete-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              card.classList.add('collapsing');
+              setTimeout(() => {
+                expenses = expenses.filter(exp => exp.id !== item.id);
+                saveExpenses();
+                renderAll();
+              }, 250);
+            });
+
+            expensesListEl.appendChild(card);
+          });
+        }
+      }
+
+      // 2. Render History Tab
+      function renderHistoryTab() {
+        const allTimeTotal = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+        document.getElementById('stat-all-time-total').textContent = formatRupee(allTimeTotal);
+        document.getElementById('stat-all-time-count').textContent = expenses.length;
+        document.getElementById('history-total-count').textContent = `${expenses.length} items`;
+
+        historyListEl.innerHTML = '';
+        if (expenses.length === 0) {
+          historyListEl.innerHTML = `
+            <div class="retro-empty-state">
+              <span class="empty-symbol">📜</span>
+              <p class="empty-desc">No expense history recorded yet.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const sortedHistory = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+        sortedHistory.forEach(item => {
+          const cat = CATEGORIES[item.category] || { icon: '📦', name: item.category };
+          const card = document.createElement('div');
+          card.className = 'retro-expense-card';
+          card.innerHTML = `
+            <div class="card-left-group">
+              <div class="category-circle-badge ${item.category}">
+                ${cat.icon}
+              </div>
+              <div class="card-text-col">
+                <span class="card-category-title">${cat.name}</span>
+                ${item.note ? `<span class="card-note-text">${escapeHtml(item.note)}</span>` : ''}
+                <span class="card-date-badge">${formatDisplayDate(item.date)}</span>
+              </div>
+            </div>
+            <div class="card-right-group">
+              <span class="card-amount-rupee">${formatRupee(item.amount)}</span>
+            </div>
+          `;
+          historyListEl.appendChild(card);
+        });
+      }
+
+      // 3. Render Breakdown Tab
+      function renderBreakdownTab() {
+        const monthKey = getViewMonthKey();
+        const monthExpenses = expenses.filter(e => e.date.startsWith(monthKey));
+        const total = monthExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
+
+        const categoryTotals = {
+          Hospital: 0,
+          Travelling: 0,
+          Grocery: 0,
+          Other: 0
+        };
+
+        monthExpenses.forEach(e => {
+          if (categoryTotals[e.category] !== undefined) {
+            categoryTotals[e.category] += Number(e.amount);
+          } else {
+            categoryTotals.Other += Number(e.amount);
+          }
+        });
+
+        breakdownContainerEl.innerHTML = '';
+
+        Object.keys(CATEGORIES).forEach(catKey => {
+          const cat = CATEGORIES[catKey];
+          const amt = categoryTotals[catKey] || 0;
+          const pct = total > 0 ? Math.round((amt / total) * 100) : 0;
+
+          const row = document.createElement('div');
+          row.className = 'breakdown-row';
+          row.innerHTML = `
+            <div class="breakdown-row-header">
+              <span>${cat.icon} ${cat.name}</span>
+              <span>${formatRupee(amt)} (${pct}%)</span>
+            </div>
+            <div class="breakdown-bar-track">
+              <div class="breakdown-bar-fill ${catKey}" style="width: ${pct}%;"></div>
+            </div>
+          `;
+          breakdownContainerEl.appendChild(row);
+        });
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      // Event Listeners
+      function initEvents() {
+        // Tab switching
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const tab = btn.dataset.tab;
+            activeTab = tab;
+
+            Object.keys(tabPanels).forEach(key => {
+              if (key === tab) {
+                tabPanels[key].classList.remove('hidden');
+              } else {
+                tabPanels[key].classList.add('hidden');
+              }
+            });
+            renderAll();
+          });
+        });
+
+        // Month Navigation
+        prevMonthBtn.addEventListener('click', () => {
+          currentViewMonth--;
+          if (currentViewMonth < 0) {
+            currentViewMonth = 11;
+            currentViewYear--;
+          }
+          renderAll();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+          currentViewMonth++;
+          if (currentViewMonth > 11) {
+            currentViewMonth = 0;
+            currentViewYear++;
+          }
+          renderAll();
+        });
+
+        // Filter chips
+        filterChips.forEach(chip => {
+          chip.addEventListener('click', () => {
+            filterChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeFilter = chip.dataset.filter;
+            renderLogTab();
+          });
+        });
+
+        // Add Expense Form Submit
+        expenseForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const amount = parseFloat(amountInput.value);
+          const category = categorySelect.value;
+          const date = dateInput.value;
+          const note = noteInput.value.trim();
+
+          if (isNaN(amount) || amount <= 0) {
+            amountInput.focus();
+            return;
+          }
+
+          if (!date) {
+            dateInput.focus();
+            return;
+          }
+
+          const newExpense = {
+            id: 'exp_r_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
+            category,
+            amount: parseFloat(amount.toFixed(2)),
+            date,
+            note
+          };
+
+          // Add to state
+          expenses.unshift(newExpense);
+          saveExpenses();
+
+          // If added for a different month, switch to that month
+          const [expYear, expMonth] = date.split('-').map(Number);
+          currentViewYear = expYear;
+          currentViewMonth = expMonth - 1;
+
+          // Reset inputs
+          amountInput.value = '';
+          noteInput.value = '';
+          amountInput.focus();
+
+          renderAll();
+        });
+      }
+
+      // Initialization
+      function init() {
+        dateInput.value = getTodayString();
+        loadExpenses();
+        initEvents();
+        renderAll();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+
+</html>
