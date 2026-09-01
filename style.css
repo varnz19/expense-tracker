@@ -26,7 +26,7 @@
   --primary-hover: #4f46e5;
   --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
   --card-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
-  
+
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -80,7 +80,9 @@
    Reset & Base Styles
    ========================================================================== */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -92,7 +94,7 @@ html {
   line-height: 1.5;
   color: var(--text-primary);
   background-color: var(--bg-app);
-  background-image: 
+  background-image:
     radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
     radial-gradient(at 90% 90%, rgba(217, 70, 239, 0.08) 0px, transparent 50%);
   background-attachment: fixed;
@@ -367,10 +369,21 @@ body {
 }
 
 /* Theme Toggle Icons */
-[data-theme="dark"] .sun-icon { display: block; }
-[data-theme="dark"] .moon-icon { display: none; }
-[data-theme="light"] .sun-icon { display: none; }
-[data-theme="light"] .moon-icon { display: block; }
+[data-theme="dark"] .sun-icon {
+  display: block;
+}
+
+[data-theme="dark"] .moon-icon {
+  display: none;
+}
+
+[data-theme="light"] .sun-icon {
+  display: none;
+}
+
+[data-theme="light"] .moon-icon {
+  display: block;
+}
 
 .select-pill {
   appearance: none;
@@ -387,7 +400,8 @@ body {
   transition: var(--transition-fast);
 }
 
-.select-pill:hover, .select-pill:focus {
+.select-pill:hover,
+.select-pill:focus {
   border-color: var(--border-accent);
   outline: none;
 }
@@ -1095,8 +1109,13 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-card {
@@ -1119,6 +1138,7 @@ body {
     opacity: 0;
     transform: translateY(20px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1269,7 +1289,8 @@ body {
   transition: var(--transition-fast);
 }
 
-.cat-chip:hover, .cat-chip.selected {
+.cat-chip:hover,
+.cat-chip.selected {
   border-color: var(--primary);
   color: var(--primary);
   background: rgba(99, 102, 241, 0.1);
@@ -1402,15 +1423,24 @@ body {
   animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.toast.toast-success { border-left-color: var(--color-success); }
-.toast.toast-danger { border-left-color: var(--color-danger); }
-.toast.toast-info { border-left-color: var(--color-info); }
+.toast.toast-success {
+  border-left-color: var(--color-success);
+}
+
+.toast.toast-danger {
+  border-left-color: var(--color-danger);
+}
+
+.toast.toast-info {
+  border-left-color: var(--color-info);
+}
 
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
